@@ -28,7 +28,7 @@ module DBLock
 
       def prefixed_lock_name(name)
         if name[0] == "." and defined? Rails
-          name = "#{Rails.application.class.parent_name}.#{name}"
+          name = "#{Rails.application.class.parent_name}#{name}"
         else
           name
         end
