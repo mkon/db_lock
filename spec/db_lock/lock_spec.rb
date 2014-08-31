@@ -1,9 +1,8 @@
 module DBLock
   RSpec.describe Lock do
-
     let(:connection) { double() }
     let(:result) { [[1]] }
-    let(:name) { 'custom_lock' }
+    let(:name) { "custom_lock" }
     let(:timeout) { 5 }
 
     before do
@@ -11,20 +10,20 @@ module DBLock
       allow(connection).to receive(:execute).and_return(result)
     end
 
-    describe '#get' do
+    describe "#get" do
       it "obtians a mysql lock with the right name and timeout" do
         Lock.get(name, timeout) {}
-        expect(connection).to have_received(:execute).with("SELECT GET_LOCK('#{name}', #{timeout})")
+        expect(connection).to have_received(:execute).with("SELECT GET_LOCK(:name, :timeout)", name: name, timeout: timeout)
       end
 
       context "when the lock was obtained" do
         let(:result) { [[1]] }
 
         it "passes through errors but still frees the lock" do
-          expect{
+          expect {
             Lock.get(name, timeout){ raise "nothing" }
           }.to raise_error
-          expect(connection).to have_received(:execute).with("SELECT RELEASE_LOCK('#{name}')")
+          expect(connection).to have_received(:execute).with("SELECT RELEASE_LOCK(:name)", name: name)
         end
 
         it "executes the block" do
@@ -37,11 +36,10 @@ module DBLock
 
         it "raises an error and does not execute the block" do
           x = 0
-          expect{ Lock.get(name, timeout){ x+=1 } }.to raise_error(DBLock::AlreadyLocked)
+          expect { Lock.get(name, timeout){ x += 1 } }.to raise_error(DBLock::AlreadyLocked)
           expect(x).to eq(0), "the block was executed"
         end
       end
     end
-
   end
 end

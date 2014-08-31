@@ -6,17 +6,18 @@ module DBLock
       def get(name, timeout=0)
         timeout = timeout.to_i # catches nil
         timeout = 0 if timeout < 0
-        raise "invalid lock name: #{name.inspect}" if !name or name.to_s.length == 0
+        raise "Invalid lock name: #{name.inspect}" if name.empty?
         raise AlreadyLocked.new("Already lock in progress") if locked?
+
         name = prefixed_lock_name(name)
-        res = ActiveRecord::Base.connection.execute("SELECT GET_LOCK('#{name}', #{timeout})")
-        if @locked = (res and res.first and res.first[0] == 1)
+        lock = ActiveRecord::Base.connection.execute("SELECT GET_LOCK(:name, :timeout)", name: name, timeout: timeout)
+        if @locked = (lock and lock.first and lock.first[0] == 1)
           yield
         else
-          raise AlreadyLocked.new("Unable to obtain lock '#{name}' within #{timeout} seconds") unless @locked
+          raise AlreadyLocked.new("Unable to obtain lock '#{name}' within #{timeout} seconds") unless locked?
         end
       ensure
-        ActiveRecord::Base.connection.execute("SELECT RELEASE_LOCK('#{name}')") if @locked
+        ActiveRecord::Base.connection.execute("SELECT RELEASE_LOCK(:name)", name: name) if locked?
         @locked = false
       end
 
@@ -24,14 +25,10 @@ module DBLock
         @locked ||= false
       end
 
-    private
+      private
 
       def prefixed_lock_name(name)
-        if name[0] == "." and defined? Rails
-          name = "#{Rails.application.class.parent_name}#{name}"
-        else
-          name
-        end
+        (name[0] == "." && defined? Rails) ? "#{Rails.application.class.parent_name}#{name}" : name
       end
     end
   end
