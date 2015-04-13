@@ -1,0 +1,16 @@
+# rename/copy to database.yml and adjust to your local settings
+
+base: &base
+  adapter: mysql2
+  host: localhost
+  encoding: utf8
+  reconnect: false
+  pool: 5
+  username: root
+  password: dummy
+
+development:
+  <<: *base
+
+test:
+  <<: *base

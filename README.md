@@ -20,6 +20,13 @@ end
 
 Before the code block is executed, it will attempt to acquire a mysql db lock for X seconds (5 in this example). If this fails it will raise an `DBLock::AlreadyLocked` error. The lock is released after the block is executed, even if the block raised an error itself.
 
+The current implementation uses a class variable to store lock state so it is not thread save when using multiple threads to aquire/release locks.
+
 ## Smart lock name
 
-If you prefix the lock with a `.` in a Rails application, `.` will be automatically replaced with `YourAppName.`.
+If you prefix the lock with a `.` in a Rails application, `.` will be automatically replaced with `YourAppName.environment` (production/development/etc).
+
+
+## Development
+
+You will have to rename/copy `config/database_example.yml` to `config/database.yml` and adjust it to your local settings.
