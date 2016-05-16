@@ -4,7 +4,7 @@ module DBLock
   class Lock
     class << self
       def get(name, timeout=0)
-        timeout = timeout.to_i # catches nil
+        timeout = timeout.to_f # catches nil
         timeout = 0 if timeout < 0
         raise "Invalid lock name: #{name.inspect}" if name.empty?
         raise AlreadyLocked.new("Already lock in progress") if locked?
