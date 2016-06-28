@@ -12,16 +12,16 @@ Gem::Specification.new do |s|
   s.email       = ["konstantin@munteanu.de"]
   s.homepage    = "https://github.com/mkon/db_lock"
   s.summary     = "Obtain manual db/mysql locks"
-  s.description = "Obtain manual db locks to guard blocks of code from parallel execution. Currently only supports mysql."
+  s.description = "Obtain manual db locks to guard blocks of code from parallel execution. Currently only supports mysql and ms-sql-server."
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "README.md"]
 
   s.add_dependency "activerecord", ">= 3.0", "< 5"
   s.add_development_dependency "rspec", "~> 3.0"
-  
-  s.add_development_dependency "mysql2"
+
+  s.add_development_dependency "mysql2", ">= 3", "< 5"
 
   # mssql development
-  s.add_development_dependency "tiny_tds"
-  s.add_development_dependency "activerecord-sqlserver-adapter"
+  s.add_development_dependency "tiny_tds", "~> 1.0"
+  s.add_development_dependency "activerecord-sqlserver-adapter", "~> 4.2"
 end
