@@ -1,5 +1,16 @@
 module DBLock
+  extend self
+
+  autoload :Adapter, "db_lock/adapter"
+
   class AlreadyLocked < StandardError; end
+
+  attr_accessor :db_handler
+
+  def db_handler
+    # this must be an active record base object or subclass
+    @db_handler || ActiveRecord::Base
+  end
 
   class Lock
     class << self
@@ -11,17 +22,15 @@ module DBLock
 
         name = prefixed_lock_name(name)
 
-        sql = ActiveRecord::Base.send(:sanitize_sql_array, ["SELECT GET_LOCK(?, ?)", name, timeout])
-        lock = ActiveRecord::Base.connection.execute(sql)
-        if @locked = (lock and lock.first and lock.first[0] == 1)
+        if Adapter.lock(name, timeout)
+          @locked = true
           yield
         else
           raise AlreadyLocked.new("Unable to obtain lock '#{name}' within #{timeout} seconds") unless locked?
         end
       ensure
         if locked?
-          sql = ActiveRecord::Base.send(:sanitize_sql_array, ["SELECT RELEASE_LOCK(?)", name])
-          ActiveRecord::Base.connection.execute(sql)
+          Adapter.release(name)
         end
         @locked = false
       end

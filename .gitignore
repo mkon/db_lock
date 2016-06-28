@@ -1,3 +1,5 @@
 .bundle/
+.byebug_history
+config/database*.yml
+!config/database*example.yml
 Gemfile.lock
-config/database.yml

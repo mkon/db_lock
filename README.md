@@ -1,6 +1,9 @@
 # DBLock
 
-Gem to obtain and release manual mysql db locks. This can be utilized for example to make sure that certain rake tasks do not run in parallel on the same database (for example when cron jobs run for too long or are accidentally started multiple times).
+Gem to obtain and release manual db locks. This can be utilized for example to make sure that certain rake tasks do not run in parallel on the same database (for example when cron jobs run for too long or are accidentally started multiple times). Currently only supports:
+
+- MySQL
+- Microsoft SQL Server
 
 ## Installation
 
@@ -29,4 +32,4 @@ If you prefix the lock with a `.` in a Rails application, `.` will be automatica
 
 ## Development
 
-You will have to rename/copy `config/database_example.yml` to `config/database.yml` and adjust it to your local settings.
+You will have to rename/copy `config/database_mysql_example.yml` to `config/database_mysql.yml` and adjust it to your local settings. Same with the MS SQL configuration file.
