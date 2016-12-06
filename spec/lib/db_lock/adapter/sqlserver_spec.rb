@@ -2,22 +2,34 @@ require 'spec_helper'
 
 module DBLock
   module Adapter
-    RSpec.describe MSSQL do
+    RSpec.describe Sqlserver do
+      skip_unless "sqlserver"
+
       let(:name) { (0...8).map { (65 + rand(26)).chr }.join }
       let(:timeout) { 5 }
       subject { described_class.instance }
 
-      before(:all) { DBLock.db_handler = Connection::MssqlA }
+      before(:all) do
+        if ENV['SQLSERVER_URL']
+          MssqlOne = Class.new(ActiveRecord::Base)
+          MssqlOne.establish_connection ENV['SQLSERVER_URL']
+
+          MssqlTwo = Class.new(ActiveRecord::Base)
+          MssqlTwo.establish_connection ENV['SQLSERVER_URL']
+
+          DBLock.db_handler = MssqlOne
+        end
+      end
 
       describe "#lock" do
         it "obtains a mysql lock with the right name" do
           expect(subject.lock(name, timeout)).to be true
-          res = Connection::MssqlA.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session')"
+          res = MssqlOne.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session')"
           expect(res.values.first).to eq 'Exclusive'
         end
 
         it "waits for timeout seconds" do
-          Connection::MssqlB.connection.execute_procedure 'sp_getapplock', Resource: name, LockMode: 'Exclusive', LockOwner: 'Session', DbPrincipal: 'public'
+          MssqlTwo.connection.execute_procedure 'sp_getapplock', Resource: name, LockMode: 'Exclusive', LockOwner: 'Session', DbPrincipal: 'public'
           time1 = Time.now
           expect(subject.lock(name, 1)).to be false
           time2 = Time.now
@@ -30,7 +42,7 @@ module DBLock
 
         it "releases a lock" do
           expect(subject.release(name)).to be true
-          res = Connection::MssqlA.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session')"
+          res = MssqlOne.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session')"
           expect(res.values.first).to eq 'NoLock'
         end
       end

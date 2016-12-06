@@ -12,3 +12,12 @@ gemspec
 
 # To use debugger
 gem 'byebug'
+
+group :mysql, optional: true do
+  gem "mysql2", "~> 0.4.5"
+end
+
+group :sqlserver, optional: true do
+  gem "tiny_tds", "~> 1.0"
+  gem "activerecord-sqlserver-adapter", "~> 4.2"
+end

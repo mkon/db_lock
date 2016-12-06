@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 module DBLock
   extend self
 
@@ -12,38 +14,46 @@ module DBLock
     @db_handler || ActiveRecord::Base
   end
 
-  class Lock
-    class << self
-      def get(name, timeout=0)
-        timeout = timeout.to_f # catches nil
-        timeout = 0 if timeout < 0
-        raise "Invalid lock name: #{name.inspect}" if name.empty?
-        raise AlreadyLocked.new("Already lock in progress") if locked?
+  module Lock
+    extend self
 
-        name = prefixed_lock_name(name)
+    def get(name, timeout=0)
+      timeout = timeout.to_f # catches nil
+      timeout = 0 if timeout < 0
+      raise "Invalid lock name: #{name.inspect}" if name.empty?
+      raise AlreadyLocked.new("Already lock in progress") if locked?
 
-        if Adapter.lock(name, timeout)
-          @locked = true
-          yield
-        else
-          raise AlreadyLocked.new("Unable to obtain lock '#{name}' within #{timeout} seconds") unless locked?
-        end
-      ensure
-        if locked?
-          Adapter.release(name)
-        end
-        @locked = false
+      name = generate_lock_name(name)
+
+      if Adapter.lock(name, timeout)
+        @locked = true
+        yield
+      else
+        raise AlreadyLocked.new("Unable to obtain lock '#{name}' within #{timeout} seconds") unless locked?
       end
-
-      def locked?
-        @locked ||= false
+    ensure
+      if locked?
+        Adapter.release(name)
       end
+      @locked = false
+    end
 
-      private
+    def locked?
+      @locked ||= false
+    end
 
-      def prefixed_lock_name(name)
-        (name[0] == "." && defined? Rails) ? "#{Rails.application.class.parent_name}.#{Rails.env}#{name}" : name
+    private
+
+    def generate_lock_name(name)
+      if (name[0] == "." && defined? Rails)
+        name = "#{Rails.application.class.parent_name}.#{Rails.env}#{name}"
       end
+      # reduce lock names of > 64 chars in size
+      # MySQL 5.7 only supports 64 chars max, there might be similar limitations elsewhere
+      if name.length > 64
+        name = "#{name.chars.first(15).join}-#{Digest::MD5.hexdigest(name)}-#{name.chars.last(15).join}"
+      end
+      name
     end
   end
 end

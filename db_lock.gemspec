@@ -16,12 +16,6 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "README.md"]
 
-  s.add_dependency "activerecord", ">= 3.0", "< 5"
+  s.add_dependency "activerecord", ">= 3.0", "< 5.1"
   s.add_development_dependency "rspec", "~> 3.0"
-
-  s.add_development_dependency "mysql2", ">= 3", "< 5"
-
-  # mssql development
-  s.add_development_dependency "tiny_tds", "~> 1.0"
-  s.add_development_dependency "activerecord-sqlserver-adapter", "~> 4.2"
 end

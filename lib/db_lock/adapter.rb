@@ -3,8 +3,8 @@ module DBLock
     extend self
 
     autoload :Base, "db_lock/adapter/base"
-    autoload :MSSQL, "db_lock/adapter/mssql"
     autoload :MYSQL, "db_lock/adapter/mysql"
+    autoload :Sqlserver, "db_lock/adapter/sqlserver"
 
     delegate :lock, :release, to: :implementation
 
@@ -13,7 +13,7 @@ module DBLock
       when 'mysql2'
         MYSQL.instance
       when 'sqlserver'
-        MSSQL.instance
+        Sqlserver.instance
       else
         raise "#{DBLock.db_handler.connection.adapter_name} is not implemented"
       end

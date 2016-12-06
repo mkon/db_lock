@@ -28,8 +28,20 @@ The current implementation uses a class variable to store lock state so it is no
 ## Smart lock name
 
 If you prefix the lock with a `.` in a Rails application, `.` will be automatically replaced with `YourAppName.environment` (production/development/etc).
+If the lock name exceeds 64 characters, it will be replaced with a lock name of 64 characters, that consists of a pre- and suffix from the original lock name and a middle MD5 checksum.
 
 
 ## Development
 
-You will have to rename/copy `config/database_mysql_example.yml` to `config/database_mysql.yml` and adjust it to your local settings. Same with the MS SQL configuration file.
+Bundle with the adapter you want to use, for example
+
+```
+bundle --with mysql2
+```
+
+Run rspec with the database url env variables set. It will only run the specs it can run and skip the others.
+
+For example
+```
+MYSQL_URL=mysql2://root:dummy@localhost/test SQLSERVER_URL=sqlserver://root:dummy@localhost/test rspec
+```

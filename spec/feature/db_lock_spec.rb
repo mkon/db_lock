@@ -4,27 +4,36 @@ module DBLock
     let(:timeout) { 5 }
 
     context "when using mssql" do
-      before(:all) { DBLock.db_handler = Connection::MssqlA }
+      skip_unless "sqlserver"
+
+      before(:all) do
+        ENV['SQLSERVER_URL'] && ActiveRecord::Base.establish_connection(ENV['SQLSERVER_URL'])
+      end
 
       it "obtains a mysql lock with the right name" do
         Lock.get(name, timeout) do
-          res = Connection::MssqlA.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session');"
+          sleep 0.1
+          res = ActiveRecord::Base.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session');"
           expect(res.values.first).to eq 'Exclusive'
         end
-        res = Connection::MssqlA.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session');"
+        res = ActiveRecord::Base.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session');"
         expect(res.values.first).to eq 'NoLock'
       end
     end
 
     context "when using mysql" do
-      before(:all) { DBLock.db_handler = Connection::MysqlA }
+      skip_unless "mysql"
+
+      before(:all) do
+        ENV['MYSQL_URL'] && ActiveRecord::Base.establish_connection(ENV['MYSQL_URL'])
+      end
 
       it "obtains a mysql lock with the right name" do
         Lock.get(name, timeout) do
-          res = Connection::MysqlA.connection.select_one "SELECT IS_FREE_LOCK('#{name}')"
+          res = ActiveRecord::Base.connection.select_one "SELECT IS_FREE_LOCK('#{name}')"
           expect(res.first.last).to eq(0)
         end
-        res = Connection::MysqlA.connection.select_one "SELECT IS_FREE_LOCK('#{name}')"
+        res = ActiveRecord::Base.connection.select_one "SELECT IS_FREE_LOCK('#{name}')"
         expect(res.first.last).to eq(1)
       end
     end

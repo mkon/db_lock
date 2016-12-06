@@ -6,7 +6,11 @@ module DBLock
     let(:timeout) { 5 }
     subject { Lock }
 
-    before(:all) { DBLock.db_handler = Connection::MysqlA }
+    # before(:all) do
+    #   Db = Class.new(ActiveRecord::Base)
+    #   Db.establish_connection(ENV['DATABASE_URL'])
+    #   DBLock.db_handler = Db
+    # end
 
     before do
       allow(Adapter).to receive(:lock) { true }
@@ -18,6 +22,12 @@ module DBLock
           subject.get(name, timeout) {}
           expect(Adapter).to have_received(:lock).with(name, timeout)
           expect(Adapter).to have_received(:release).with(name)
+        end
+
+        it "limits lock names to 64 characters" do
+          subject.get("lock.name.exceeding.#{'asdf'*10}.sixtyfour.characters", timeout) {}
+          expect(Adapter).to have_received(:lock).with("lock.name.excee-9782cc3fe0258bd32022ddfd0a24c8d4-four.characters", timeout)
+          expect(Adapter).to have_received(:release).with("lock.name.excee-9782cc3fe0258bd32022ddfd0a24c8d4-four.characters")
         end
 
         context "when the lock can be achieved" do
