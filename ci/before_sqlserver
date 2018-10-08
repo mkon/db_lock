@@ -1,0 +1,23 @@
+#!/bin/bash
+
+docker run \
+  -e ACCEPT_EULA=Y \
+  -e SA_PASSWORD=Password1234 \
+  -p 127.0.0.1:1433:1433 \
+  -d mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+
+function sqlserver_exec() {
+  echo -e "$@\nGO" | tsql -H 127.0.0.1 -p 1433 -U sa -P Password1234 &> /dev/null
+}
+
+function sqlserver_ready() {
+  sqlserver_exec 'SELECT @@VERSION'
+}
+
+until sqlserver_ready;
+do
+  echo 'Waiting for SqlServer ...'
+  sleep 1
+done
+
+sqlserver_exec 'CREATE DATABASE test'

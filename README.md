@@ -36,7 +36,7 @@ If the lock name exceeds 64 characters, it will be replaced with a lock name of 
 Bundle with the adapter you want to use, for example
 
 ```
-bundle --with mysql2
+bundle --with mysql
 ```
 
 Run rspec with the database url env variables set. It will only run the specs it can run and skip the others.

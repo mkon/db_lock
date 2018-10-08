@@ -1,0 +1,25 @@
+sudo: required
+
+language: ruby
+
+services:
+  - mysql
+  - docker
+
+rvm:
+  - '2.3'
+  - '2.4'
+  - '2.5'
+
+env:
+  - DB=mysql
+  - DB=sqlserver
+
+install:
+  - ci/install_$DB
+
+before_script:
+  - ci/before_$DB
+
+script:
+  - ci/run_$DB
