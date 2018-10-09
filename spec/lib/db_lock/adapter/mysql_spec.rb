@@ -9,14 +9,18 @@ module DBLock
       let(:timeout) { 5 }
       subject { described_class.instance }
 
-      before(:all) do
-        MysqlOne = Class.new(ActiveRecord::Base)
-        MysqlOne.establish_connection ENV['MYSQL_URL']
+      if ENV['MYSQL_URL']
+        before(:all) do
+          MysqlOne = Class.new(ActiveRecord::Base)
+          MysqlOne.establish_connection ENV['MYSQL_URL']
 
-        MysqlTwo = Class.new(ActiveRecord::Base)
-        MysqlTwo.establish_connection ENV['MYSQL_URL']
+          MysqlTwo = Class.new(ActiveRecord::Base)
+          MysqlTwo.establish_connection ENV['MYSQL_URL']
+        end
 
-        DBLock.db_handler = MysqlOne
+        before do
+          allow(DBLock).to receive(:db_handler).and_return(MysqlOne)
+        end
       end
 
       describe "#lock" do

@@ -9,15 +9,17 @@ module DBLock
       let(:timeout) { 5 }
       subject { described_class.instance }
 
-      before(:all) do
-        if ENV['SQLSERVER_URL']
+      if ENV['SQLSERVER_URL']
+        before(:all) do
           MssqlOne = Class.new(ActiveRecord::Base)
           MssqlOne.establish_connection ENV['SQLSERVER_URL']
 
           MssqlTwo = Class.new(ActiveRecord::Base)
           MssqlTwo.establish_connection ENV['SQLSERVER_URL']
+        end
 
-          DBLock.db_handler = MssqlOne
+        before do
+          allow(DBLock).to receive(:db_handler).and_return(MssqlOne)
         end
       end
 
