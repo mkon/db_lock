@@ -23,7 +23,7 @@ end
 
 Before the code block is executed, it will attempt to acquire a mysql db lock for X seconds (5 in this example). If this fails it will raise an `DBLock::AlreadyLocked` error. The lock is released after the block is executed, even if the block raised an error itself.
 
-The current implementation uses a class variable to store lock state so it is not thread save when using multiple threads to aquire/release locks.
+The current implementation uses a class variable to store lock state so it is not threaded save when using multiple threads to acquire/release locks.
 
 ## Smart lock name
 
