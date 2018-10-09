@@ -1,0 +1,3 @@
+#!/bin/sh
+
+SQLSERVER_URL=sqlserver://sa:Password1234@127.0.0.1:1433/test bundle exec rspec

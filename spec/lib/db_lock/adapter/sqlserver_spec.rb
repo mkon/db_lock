@@ -24,7 +24,7 @@ module DBLock
       end
 
       describe "#lock" do
-        it "obtains a mysql lock with the right name" do
+        it "obtains a sqlserver lock with the right name" do
           expect(subject.lock(name, timeout)).to be true
           res = MssqlOne.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session')"
           expect(res.values.first).to eq 'Exclusive'

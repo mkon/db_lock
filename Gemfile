@@ -11,13 +11,13 @@ gemspec
 # your gem to rubygems.org.
 
 # To use debugger
-gem 'byebug'
+gem "byebug"
 
 group :mysql, optional: true do
-  gem "mysql2", "~> 0.4.5"
+  gem "mysql2", "~> 0.5.2"
 end
 
 group :sqlserver, optional: true do
-  gem "tiny_tds", "~> 1.0"
-  gem "activerecord-sqlserver-adapter", "~> 4.2"
+  gem "tiny_tds", "~> 2.1.2"
+  gem "activerecord-sqlserver-adapter", "~> 5.1.6"
 end
