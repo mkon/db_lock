@@ -10,7 +10,7 @@ module DBLock
         ENV['SQLSERVER_URL'] && ActiveRecord::Base.establish_connection(ENV['SQLSERVER_URL'])
       end
 
-      it "obtains a mysql lock with the right name" do
+      it "obtains a lock with the right name" do
         Lock.get(name, timeout) do
           sleep 0.1
           res = ActiveRecord::Base.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session');"
@@ -28,7 +28,7 @@ module DBLock
         ENV['MYSQL_URL'] && ActiveRecord::Base.establish_connection(ENV['MYSQL_URL'])
       end
 
-      it "obtains a mysql lock with the right name" do
+      it "obtains a lock with the right name" do
         Lock.get(name, timeout) do
           res = ActiveRecord::Base.connection.select_one "SELECT IS_FREE_LOCK('#{name}')"
           expect(res.first.last).to eq(0)
