@@ -23,7 +23,7 @@ end
 
 Before the code block is executed, it will attempt to acquire a mysql db lock for X seconds (5 in this example). If this fails it will raise an `DBLock::AlreadyLocked` error. The lock is released after the block is executed, even if the block raised an error itself.
 
-The current implementation uses a class variable to store lock state so it is not threaded save when using multiple threads to acquire/release locks.
+The current implementation uses a class variable to store lock state so it is not thread-safe when using multiple threads to acquire/release locks.
 
 ## Smart lock name
 
@@ -35,13 +35,13 @@ If the lock name exceeds 64 characters, it will be replaced with a lock name of 
 
 Bundle with the adapter you want to use, for example
 
-```
-bundle --with mysql2
+```bash
+$ bundle --with mysql
 ```
 
 Run rspec with the database url env variables set. It will only run the specs it can run and skip the others.
 
 For example
-```
-MYSQL_URL=mysql2://root:dummy@localhost/test SQLSERVER_URL=sqlserver://root:dummy@localhost/test rspec
+```bash
+$ MYSQL_URL=mysql2://root:dummy@localhost/test SQLSERVER_URL=sqlserver://root:dummy@localhost/test rspec
 ```
