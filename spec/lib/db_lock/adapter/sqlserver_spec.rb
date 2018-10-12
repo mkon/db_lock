@@ -35,7 +35,7 @@ module DBLock
           time1 = Time.now
           expect(subject.lock(name, 1)).to be false
           time2 = Time.now
-          expect((time2-time1).round(1).to_s).to eq "1.0"
+          expect((time2-time1).round(2)).to be_between(1.0, 1.1).inclusive
         end
       end
 
