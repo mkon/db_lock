@@ -31,6 +31,8 @@ Style/FormatStringToken:
   Enabled: false
 Style/FrozenStringLiteralComment:
   Enabled: false
+Style/ModuleFunction:
+  Enabled: false
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
     '%i': ()
