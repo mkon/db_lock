@@ -41,13 +41,15 @@ module DBLock
       end
 
       describe '#release' do
+        # rubocop:disable RSpec/ExpectInHook
+        before { expect(subject.lock(name)).to be true }
+        # rubocop:enable RSpec/ExpectInHook
+
         it 'releases a lock' do
           expect(subject.release(name)).to be true
           res = MysqlOne.connection.select_one "SELECT IS_FREE_LOCK('#{name}')"
           expect(res.first.last).to eq(1)
         end
-
-        it { expect(subject.lock(name)).to be true }
       end
     end
   end
