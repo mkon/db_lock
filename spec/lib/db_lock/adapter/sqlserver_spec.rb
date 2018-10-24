@@ -44,13 +44,15 @@ module DBLock
       end
 
       describe '#release' do
+        # rubocop:disable RSpec/ExpectInHook
+        before { expect(subject.lock(name)).to be true }
+        # rubocop:enable RSpec/ExpectInHook
+
         it 'releases a lock' do
           expect(subject.release(name)).to be true
           res = MssqlOne.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session')"
           expect(res.values.first).to eq 'NoLock'
         end
-
-        it { expect(subject.lock(name, timeout)).to be true }
       end
     end
   end

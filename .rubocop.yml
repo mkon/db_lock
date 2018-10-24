@@ -3,6 +3,9 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   TargetRubyVersion: 2.5
 
+Bundler/OrderedGems:
+  Enabled: false
+
 Layout/LeadingCommentSpace:
   Exclude:
     - '**/*.ru'
