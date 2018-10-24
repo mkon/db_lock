@@ -7,12 +7,6 @@ module DBLock
     let(:name) { 'custom_lock:db_lock:' + (0...8).map { rand(65..90).chr }.join }
     let(:timeout) { 5 }
 
-    # before(:all) do
-    #   Db = Class.new(ActiveRecord::Base)
-    #   Db.establish_connection(ENV['DATABASE_URL'])
-    #   DBLock.db_handler = Db
-    # end
-
     before do
       allow(Adapter).to receive(:lock).and_return(true)
       allow(Adapter).to receive(:release).and_return(true)
