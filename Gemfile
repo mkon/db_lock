@@ -1,4 +1,4 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 # Declare your gem's dependencies in paysource.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
@@ -11,13 +11,13 @@ gemspec
 # your gem to rubygems.org.
 
 # To use debugger
-gem "byebug"
+gem 'byebug'
 
 group :mysql, optional: true do
-  gem "mysql2", "~> 0.5.2"
+  gem 'mysql2', '~> 0.5.2'
 end
 
 group :sqlserver, optional: true do
-  gem "tiny_tds", "~> 2.1.2"
-  gem "activerecord-sqlserver-adapter", "~> 5.1.6"
+  gem 'tiny_tds', '~> 2.1.2'
+  gem 'activerecord-sqlserver-adapter', '~> 5.1.6'
 end

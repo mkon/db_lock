@@ -3,7 +3,7 @@ require 'digest/md5'
 module DBLock
   extend self
 
-  autoload :Adapter, "db_lock/adapter"
+  autoload :Adapter, 'db_lock/adapter'
 
   class AlreadyLocked < StandardError; end
 
@@ -16,12 +16,11 @@ module DBLock
 
   module Lock
     extend self
-
-    def get(name, timeout=0)
+    def get(name, timeout = 0)
       timeout = timeout.to_f # catches nil
-      timeout = 0 if timeout < 0
+      timeout = 0 if timeout.negative?
       raise "Invalid lock name: #{name.inspect}" if name.empty?
-      raise AlreadyLocked.new("Already lock in progress") if locked?
+      raise AlreadyLocked, 'Already lock in progress' if locked?
 
       name = generate_lock_name(name)
 
@@ -29,12 +28,10 @@ module DBLock
         @locked = true
         yield
       else
-        raise AlreadyLocked.new("Unable to obtain lock '#{name}' within #{timeout} seconds") unless locked?
+        raise AlreadyLocked, "Unable to obtain lock '#{name}' within #{timeout} seconds" unless locked?
       end
     ensure
-      if locked?
-        Adapter.release(name)
-      end
+      Adapter.release(name) if locked?
       @locked = false
     end
 
@@ -45,9 +42,7 @@ module DBLock
     private
 
     def generate_lock_name(name)
-      if (name[0] == "." && defined? Rails)
-        name = "#{Rails.application.class.parent_name}.#{Rails.env}#{name}"
-      end
+      name = "#{Rails.application.class.parent_name}.#{Rails.env}#{name}" if name[0] == '.' && defined? Rails
       # reduce lock names of > 64 chars in size
       # MySQL 5.7 only supports 64 chars max, there might be similar limitations elsewhere
       if name.length > 64

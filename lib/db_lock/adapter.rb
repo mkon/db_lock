@@ -2,9 +2,9 @@ module DBLock
   module Adapter
     extend self
 
-    autoload :Base, "db_lock/adapter/base"
-    autoload :MYSQL, "db_lock/adapter/mysql"
-    autoload :Sqlserver, "db_lock/adapter/sqlserver"
+    autoload :Base, 'db_lock/adapter/base'
+    autoload :MYSQL, 'db_lock/adapter/mysql'
+    autoload :Sqlserver, 'db_lock/adapter/sqlserver'
 
     delegate :lock, :release, to: :implementation
 
