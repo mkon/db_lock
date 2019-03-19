@@ -19,6 +19,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'activerecord', '>= 3.0', '< 6'
   s.add_development_dependency 'rspec', '~> 3.7'
-  s.add_development_dependency 'rubocop', '= 0.63.1'
+  s.add_development_dependency 'rubocop', '= 0.66.0'
   s.add_development_dependency 'rubocop-rspec', '1.32.0'
 end
