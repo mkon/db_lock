@@ -3,7 +3,7 @@
 if [ $DB == "mysql" ]; then
 cat <<EOF | mysql -u root
   CREATE DATABASE IF NOT EXISTS test;
-  USE mysql;
+  USE test;
 EOF
 elif [ $DB == "sqlserver" ]; then
   docker run \
