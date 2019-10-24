@@ -4,8 +4,6 @@ if [ $DB == "mysql" ]; then
 cat <<EOF | mysql -u root
   CREATE DATABASE IF NOT EXISTS test;
   USE mysql;
-  UPDATE user SET password = PASSWORD('dummy') WHERE user = 'root';
-  FLUSH PRIVILEGES;
 EOF
 elif [ $DB == "sqlserver" ]; then
   docker run \
