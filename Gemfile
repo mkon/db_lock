@@ -21,3 +21,7 @@ group :sqlserver, optional: true do
   gem 'tiny_tds', '~> 2.1.2'
   gem 'activerecord-sqlserver-adapter', '~> 5.2.0'
 end
+
+if (version = ENV['RAILS'])
+  gem 'activerecord', "~> #{version}.0"
+end

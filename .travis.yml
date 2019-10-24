@@ -19,6 +19,15 @@ env:
   - DB=mysql
   - DB=sqlserver
 
+env:
+  matrix:
+    - DB=mysql RAILS=4.2
+    - DB=mysql RAILS=5.2
+    - DB=mysql RAILS=6.0
+    - DB=sqlserver RAILS=4.2
+    - DB=sqlserver RAILS=5.2
+    - DB=sqlserver RAILS=6.0
+
 install:
   - ci/install
 
