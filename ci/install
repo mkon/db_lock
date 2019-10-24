@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ $DB == "mysql" ]; then
   bundle install --with mysql
