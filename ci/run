@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ $DB == "mysql" ]; then
+  MYSQL_URL=mysql2://root:dummy@127.0.0.1:3306/test bundle exec rspec
+elif [ $DB == "sqlserver" ]; then
+  SQLSERVER_URL=sqlserver://sa:Password1234@127.0.0.1:1433/test bundle exec rspec
+fi

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ $DB == "mysql" ]; then
+  bundle install --with mysql
+elif [ $DB == "sqlserver" ]; then
+  sudo apt-get install -y wget build-essential libc6-dev
+
+  wget http://www.freetds.org/files/stable/freetds-1.00.104.tar.gz
+  tar -xzf freetds-1.00.104.tar.gz
+  cd freetds-1.00.104
+  ./configure --prefix=/usr/local --with-tdsver=7.3
+  sudo make
+  sudo make install
+
+  bundle install --with sqlserver
+fi

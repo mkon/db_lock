@@ -7,19 +7,19 @@ services:
   - docker
 
 rvm:
-  - '2.3'
   - '2.4'
   - '2.5'
+  - '2.6'
 
 env:
   - DB=mysql
   - DB=sqlserver
 
 install:
-  - ci/install_$DB
+  - ci/install
 
 before_script:
-  - ci/before_$DB
+  - ci/before
 
 script:
-  - ci/run_$DB
+  - ci/run
