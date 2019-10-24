@@ -14,12 +14,12 @@ gemspec
 gem 'byebug'
 
 group :mysql, optional: true do
-  gem 'mysql2', '~> 0.5.2'
+  gem 'mysql2'
 end
 
 group :sqlserver, optional: true do
-  gem 'tiny_tds', '~> 2.1.2'
-  gem 'activerecord-sqlserver-adapter', '~> 5.2.0'
+  gem 'tiny_tds'
+  gem 'activerecord-sqlserver-adapter'
 end
 
 if (version = ENV['RAILS'])
