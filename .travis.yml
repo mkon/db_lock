@@ -11,6 +11,10 @@ rvm:
   - '2.5'
   - '2.6'
 
+branches:
+  only:
+    - master
+
 env:
   - DB=mysql
   - DB=sqlserver
