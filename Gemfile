@@ -13,15 +13,15 @@ gemspec
 # To use debugger
 gem 'byebug'
 
+version = ENV['RAILS'] || '5.2'
+
+gem 'activerecord', "~> #{version}.0"
+
 group :mysql, optional: true do
   gem 'mysql2'
 end
 
 group :sqlserver, optional: true do
   gem 'tiny_tds'
-  gem 'activerecord-sqlserver-adapter', '~> 5.2'
-end
-
-if (version = ENV['RAILS'])
-  gem 'activerecord', "~> #{version}.0"
+  gem 'activerecord-sqlserver-adapter', "~> #{version}.0"
 end
