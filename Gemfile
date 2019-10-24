@@ -23,5 +23,5 @@ end
 
 group :sqlserver, optional: true do
   gem 'tiny_tds'
-  gem 'activerecord-sqlserver-adapter', "~> #{version}.0"
+  gem 'activerecord-sqlserver-adapter', "~> #{version}.0" if ENV['DB'] == 'sqlserver' # allow testing rails 6 with mysql only
 end
