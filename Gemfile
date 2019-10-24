@@ -13,11 +13,15 @@ gemspec
 # To use debugger
 gem 'byebug'
 
+version = ENV['RAILS'] || '5.2'
+
+gem 'activerecord', "~> #{version}.0"
+
 group :mysql, optional: true do
-  gem 'mysql2', '~> 0.5.2'
+  gem 'mysql2'
 end
 
 group :sqlserver, optional: true do
-  gem 'tiny_tds', '~> 2.1.2'
-  gem 'activerecord-sqlserver-adapter', '~> 5.2.0'
+  gem 'tiny_tds'
+  gem 'activerecord-sqlserver-adapter', "~> #{version}.0" if ENV['DB'] == 'sqlserver' # allow testing rails 6 with mysql only
 end
