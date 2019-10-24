@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ $DB == "mysql" ]; then
   MYSQL_URL=mysql2://root:dummy@127.0.0.1:3306/test bundle exec rspec
