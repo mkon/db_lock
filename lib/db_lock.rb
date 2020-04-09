@@ -42,7 +42,7 @@ module DBLock
     private
 
     def generate_lock_name(name)
-      name = "#{Rails.application.class.parent_name}.#{Rails.env}#{name}" if name[0] == '.' && defined? Rails
+      name = "#{Rails.application.class.module_parent_name}.#{Rails.env}#{name}" if name[0] == '.' && defined? Rails
       # reduce lock names of > 64 chars in size
       # MySQL 5.7 only supports 64 chars max, there might be similar limitations elsewhere
       if name.length > 64
