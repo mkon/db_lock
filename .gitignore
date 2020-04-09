@@ -3,3 +3,4 @@
 config/database*.yml
 !config/database*example.yml
 Gemfile.lock
+coverage/

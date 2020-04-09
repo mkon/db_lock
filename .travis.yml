@@ -6,7 +6,7 @@ services:
   - mysql
   - docker
 
-rvm: 2.6
+rvm: 2.6.6
 
 branches:
   only:
