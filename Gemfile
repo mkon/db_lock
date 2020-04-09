@@ -13,9 +13,9 @@ gemspec
 # To use debugger
 gem 'byebug'
 
-version = ENV['RAILS'] || '5.2'
+version = ENV['RAILS'] || '6.0'
 
-gem 'activerecord', "~> #{version}.0"
+gem 'rails', "~> #{version}.0"
 
 group :mysql, optional: true do
   gem 'mysql2'

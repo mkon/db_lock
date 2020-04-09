@@ -27,6 +27,19 @@ module DBLock
         expect(Adapter).to have_received(:release).with(lock_name)
       end
 
+      context 'when using dynamic lock names based on Rails app name' do
+        before do
+          allow(Rails).to receive_message_chain(:application, :class, :parent_name).and_return('Dummy')
+          allow(Rails).to receive_message_chain(:application, :class, :module_parent_name).and_return('Dummy')
+        end
+
+        it 'supports lock names from rails app name' do
+          subject.get(".custom_lock", timeout) {}
+          expect(Adapter).to have_received(:lock).with('Dummy.development.custom_lock', timeout)
+          expect(Adapter).to have_received(:release).with('Dummy.development.custom_lock')
+        end
+      end
+
       context 'when the lock can be achieved' do
         before do
           allow(Adapter).to receive(:lock).and_return(true)
