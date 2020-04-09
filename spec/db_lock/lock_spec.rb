@@ -35,8 +35,8 @@ module DBLock
 
         it 'supports lock names from rails app name' do
           subject.get(".custom_lock", timeout) {}
-          expect(Adapter).to have_received(:lock).with('Dummy.development.custom_lock', timeout)
-          expect(Adapter).to have_received(:release).with('Dummy.development.custom_lock')
+          expect(Adapter).to have_received(:lock).with('Dummy.test.custom_lock', timeout)
+          expect(Adapter).to have_received(:release).with('Dummy.test.custom_lock')
         end
       end
 
