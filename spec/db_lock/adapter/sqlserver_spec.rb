@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module DBLock
   module Adapter
-    RSpec.describe Sqlserver do
+    RSpec.describe Sqlserver, db: :sqlserver do
       skip_unless 'sqlserver'
 
       subject { described_class.instance }

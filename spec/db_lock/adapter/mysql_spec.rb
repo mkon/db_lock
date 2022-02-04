@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module DBLock
   module Adapter
-    RSpec.describe MYSQL do
+    RSpec.describe MYSQL, db: :mysql do
       skip_unless 'mysql'
 
       subject { described_class.instance }

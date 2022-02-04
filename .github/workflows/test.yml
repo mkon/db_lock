@@ -33,6 +33,7 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     env:
       BUNDLE_WITH: mysql
+      DB: mysql
       MYSQL_URL: mysql2://root@127.0.0.1:3306/test
       RAILS: ${{ matrix.activerecord }}
       RAILS_ENV: test
@@ -46,7 +47,7 @@ jobs:
       - name: Bundle
         run: bundle install --quiet
       - name: RSpec
-        run: bundle exec rspec
+        run: bundle exec rspec -t ~db:sqlserver
 
   test-sqlserver:
     name: Test SQLServer
@@ -88,4 +89,4 @@ jobs:
       - name: Bundle
         run: bundle install
       - name: RSpec
-        run: bundle exec rspec
+        run: bundle exec rspec -t ~db:mysql

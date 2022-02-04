@@ -3,7 +3,7 @@ module DBLock
     let(:name) { (0...8).map { rand(65..90).chr }.join }
     let(:timeout) { 5 }
 
-    context 'when using mssql' do
+    context 'when using mssql', db: :sqlserver do
       skip_unless 'sqlserver'
 
       before(:all) do
@@ -21,7 +21,7 @@ module DBLock
       end
     end
 
-    context 'when using mysql' do
+    context 'when using mysql', db: :mysql do
       skip_unless 'mysql'
 
       before(:all) do
