@@ -1,0 +1,91 @@
+name: Tests
+
+on: [push,pull_request]
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+      - name: Bundle
+        run: bundle install --quiet
+      - name: Rubocop
+        run: bundle exec rubocop
+
+  test-mysql:
+    name: Test MySQL
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        activerecord: ['5.0', '5.2', '6.0']
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    env:
+      BUNDLE_WITH: mysql
+      MYSQL_URL: mysql2://root@127.0.0.1:3306/test
+      RAILS: ${{ matrix.activerecord }}
+      RAILS_ENV: test
+    steps:
+      - name: Create test DB
+        run: mysql --host 127.0.0.1 --port 3306 -uroot -e "CREATE DATABASE IF NOT EXISTS test;"
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+      - name: Bundle
+        run: bundle install --quiet
+      - name: RSpec
+        run: bundle exec rspec
+
+  test-sqlserver:
+    name: Test SQLServer
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        activerecord: ['5.0', '5.2', '6.0']
+    services:
+      sql.data:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: Password1234
+        ports:
+          - 1433:1433
+    env:
+      BUNDLE_WITH: sqlserver
+      DB: sqlserver
+      SQLSERVER_URL: sqlserver://sa:Password1234@127.0.0.1:1433/test
+      RAILS: ${{ matrix.activerecord }}
+      RAILS_ENV: test
+    steps:
+      - name: Setup FreeTDS
+        run: |
+          sudo apt-get install -y freetds-bin freetds-common freetds-dev libct4 libsybdb5
+      - name: Wait for SQLServer
+        run: |
+          until echo -e "SELECT @@VERSION\nGO" | tsql -H 127.0.0.1 -p 1433 -U sa -P Password1234;
+          do
+            echo 'Waiting for SqlServer ...'
+            sleep 2
+          done
+      - name: Create test DB
+        run: echo -e "CREATE DATABASE test\nGO" | tsql -H 127.0.0.1 -p 1433 -U sa -P Password1234
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+      - name: Bundle
+        run: bundle install
+      - name: RSpec
+        run: bundle exec rspec
