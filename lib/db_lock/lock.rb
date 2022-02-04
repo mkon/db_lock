@@ -32,9 +32,7 @@ module DBLock
       name = "#{rails_app_name}.#{Rails.env}#{name}" if name[0] == '.' && defined? Rails
       # reduce lock names of > 64 chars in size
       # MySQL 5.7 only supports 64 chars max, there might be similar limitations elsewhere
-      if name.length > 64
-        name = "#{name.chars.first(15).join}-#{Digest::MD5.hexdigest(name)}-#{name.chars.last(15).join}"
-      end
+      name = "#{name.chars.first(15).join}-#{Digest::MD5.hexdigest(name)}-#{name.chars.last(15).join}" if name.length > 64
       name
     end
 

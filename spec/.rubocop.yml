@@ -1,7 +1,11 @@
-require: rubocop-rspec
-inherit_from: ../.rubocop.yml
+inherit_from:
+  - .rubocop_todo.yml
+  - ../.rubocop.yml
 
-Lint/UnneededCopDisableDirective:
+require: rubocop-rspec
+
+
+Lint/RedundantCopDisableDirective:
   Enabled: false
 
 Metrics/BlockLength:
