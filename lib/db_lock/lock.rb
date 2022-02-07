@@ -3,9 +3,12 @@ require 'digest/md5'
 module DBLock
   module Lock
     extend self
+
+    # rubocop:disable Metrics/AbcSize
     def get(name, timeout = 0)
       timeout = timeout.to_f # catches nil
       timeout = 0 if timeout.negative?
+
       raise "Invalid lock name: #{name.inspect}" if name.empty?
       raise AlreadyLocked, 'Already lock in progress' if locked?
 
@@ -21,6 +24,7 @@ module DBLock
       Adapter.release(name) if locked?
       @locked = false
     end
+    # rubocop:enable Metrics/AbcSize
 
     def locked?
       @locked ||= false

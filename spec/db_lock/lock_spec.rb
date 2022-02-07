@@ -4,7 +4,7 @@ module DBLock
   RSpec.describe Lock do
     subject { Lock }
 
-    let(:name) { 'custom_lock:db_lock:' + (0...8).map { rand(65..90).chr }.join }
+    let(:name) { "custom_lock:db_lock:#{(0...8).map { rand(65..90).chr }.join}" }
     let(:timeout) { 5 }
 
     before do
@@ -16,13 +16,13 @@ module DBLock
       let(:lock_name) { 'lock.name.excee-9782cc3fe0258bd32022ddfd0a24c8d4-four.characters' }
 
       it 'uses the Adapter to receive and release the lock' do
-        subject.get(name, timeout) {}
+        subject.get(name, timeout) { sleep 0 }
         expect(Adapter).to have_received(:lock).with(name, timeout)
         expect(Adapter).to have_received(:release).with(name)
       end
 
       it 'limits lock names to 64 characters' do
-        subject.get("lock.name.exceeding.#{'asdf' * 10}.sixtyfour.characters", timeout) {}
+        subject.get("lock.name.exceeding.#{'asdf' * 10}.sixtyfour.characters", timeout) { sleep 0 }
         expect(Adapter).to have_received(:lock).with(lock_name, timeout)
         expect(Adapter).to have_received(:release).with(lock_name)
       end
@@ -34,7 +34,7 @@ module DBLock
         end
 
         it 'supports lock names from rails app name' do
-          subject.get(".custom_lock", timeout) {}
+          subject.get(".custom_lock", timeout) { sleep 0 }
           expect(Adapter).to have_received(:lock).with('Dummy.test.custom_lock', timeout)
           expect(Adapter).to have_received(:release).with('Dummy.test.custom_lock')
         end

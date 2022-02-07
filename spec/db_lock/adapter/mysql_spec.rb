@@ -9,30 +9,22 @@ module DBLock
 
       let(:name) { (0...8).map { rand(65..90).chr }.join }
       let(:timeout) { 5 }
+      let!(:mysql_one) { Class.new(ActiveRecord::Base).tap { |db| db.establish_connection ENV['MYSQL_URL'] } }
+      let!(:mysql_two) { Class.new(ActiveRecord::Base).tap { |db| db.establish_connection ENV['MYSQL_URL'] } }
 
-      if ENV['MYSQL_URL']
-        before(:all) do
-          MysqlOne = Class.new(ActiveRecord::Base)
-          MysqlOne.establish_connection ENV['MYSQL_URL']
-
-          MysqlTwo = Class.new(ActiveRecord::Base)
-          MysqlTwo.establish_connection ENV['MYSQL_URL']
-        end
-
-        before do
-          allow(DBLock).to receive(:db_handler).and_return(MysqlOne)
-        end
+      before do
+        allow(DBLock).to receive(:db_handler).and_return(mysql_one)
       end
 
       describe '#lock' do
         it 'obtains a mysql lock with the right name' do
           expect(subject.lock(name, timeout)).to be true
-          res = MysqlOne.connection.select_one "SELECT IS_FREE_LOCK('#{name}')"
+          res = mysql_one.connection.select_one "SELECT IS_FREE_LOCK('#{name}')"
           expect(res.first.last).to eq(0)
         end
 
         it 'waits for timeout seconds' do
-          MysqlTwo.connection.execute "SELECT GET_LOCK('#{name}', 0)"
+          mysql_two.connection.execute "SELECT GET_LOCK('#{name}', 0)"
           time1 = Time.now
           expect(subject.lock(name, 1)).to be false
           time2 = Time.now
@@ -47,7 +39,7 @@ module DBLock
 
         it 'releases a lock' do
           expect(subject.release(name)).to be true
-          res = MysqlOne.connection.select_one "SELECT IS_FREE_LOCK('#{name}')"
+          res = mysql_one.connection.select_one "SELECT IS_FREE_LOCK('#{name}')"
           expect(res.first.last).to eq(1)
         end
       end

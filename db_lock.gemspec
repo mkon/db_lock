@@ -15,12 +15,16 @@ Gem::Specification.new do |s|
   s.description = 'Obtain manual db locks to guard blocks of code from parallel execution.' \
                   'Currently only supports mysql and ms-sql-server.'
 
+  s.metadata['rubygems_mfa_required'] = 'true'
+
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'README.md']
+
+  s.required_ruby_version = '~> 2.6'
 
   s.add_dependency 'activerecord', '>= 4.2', '< 7'
 
   s.add_development_dependency 'rspec', '~> 3.7'
-  s.add_development_dependency 'rubocop', '0.81.0'
-  s.add_development_dependency 'rubocop-rspec', '1.37.1'
+  s.add_development_dependency 'rubocop', '1.25.1'
+  s.add_development_dependency 'rubocop-rspec', '2.8.0'
   s.add_development_dependency 'simplecov'
 end
