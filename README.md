@@ -1,7 +1,7 @@
 # DBLock
 
 [![Gem Version](https://badge.fury.io/rb/db_lock.svg)](https://badge.fury.io/rb/db_lock)
-[![Build Status](https://travis-ci.org/mkon/db_lock.svg?branch=master)](https://travis-ci.org/mkon/db_lock)
+[![Tests](https://github.com/mkon/db_lock/actions/workflows/test.yml/badge.svg)](https://github.com/mkon/db_lock/actions/workflows/test.yml)
 
 Gem to obtain and release manual db locks. This can be utilized for example to make sure that certain rake tasks do not run in parallel on the same database (for example when cron jobs run for too long or are accidentally started multiple times). Currently only supports:
 
