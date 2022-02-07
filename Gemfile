@@ -13,7 +13,7 @@ gemspec
 # To use debugger
 gem 'byebug'
 
-version = ENV['RAILS'] || '6.0'
+version = ENV['RAILS'] || '6.1'
 
 gem 'rails', "~> #{version}.0"
 
