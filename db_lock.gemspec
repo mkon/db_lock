@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 2.7', '< 3.1'
 
-  s.add_dependency 'activerecord', '>= 5.2', '< 7.1'
+  s.add_dependency 'activerecord', '>= 6.1', '< 7.1'
 
   s.add_development_dependency 'rspec', '~> 3.7'
   s.add_development_dependency 'rubocop', '1.28.2'
