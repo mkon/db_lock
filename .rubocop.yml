@@ -31,6 +31,8 @@ Style/ConditionalAssignment:
   Enabled: false
 Style/Documentation:
   Enabled: false
+Style/FetchEnvVar:
+  Enabled: false
 Style/FormatString:
   Enabled: false
 Style/FormatStringToken:
