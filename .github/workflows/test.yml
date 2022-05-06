@@ -16,8 +16,6 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
-      - name: Bundle
-        run: bundle install --quiet
       - name: Rubocop
         run: bundle exec rubocop
 
@@ -49,8 +47,6 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - name: Bundle
-        run: bundle install --quiet
       - name: RSpec
         run: bundle exec rspec -t ~db:sqlserver
 
@@ -59,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        activerecord: ['6.1', '7.0'] # No 7.0 support yet 2022-02-07
+        activerecord: ['6.1', '7.0']
         ruby: ['2.7', '3.0']
 
     services:
@@ -93,7 +89,5 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - name: Bundle
-        run: bundle install
       - name: RSpec
         run: bundle exec rspec -t ~db:mysql
