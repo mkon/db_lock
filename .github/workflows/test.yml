@@ -12,10 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
+          bundler-cache: true
+          cache-version: mysql-7.0
       - name: Rubocop
         run: bundle exec rubocop
 
@@ -43,10 +45,12 @@ jobs:
     steps:
       - name: Create test DB
         run: mysql --host 127.0.0.1 --port 3306 -uroot -e "CREATE DATABASE IF NOT EXISTS test;"
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          cache-version: mysql-${{ matrix.activerecord }}
       - name: RSpec
         run: bundle exec rspec -t ~db:sqlserver
 
@@ -85,9 +89,11 @@ jobs:
           done
       - name: Create test DB
         run: echo -e "CREATE DATABASE test\nGO" | tsql -H 127.0.0.1 -p 1433 -U sa -P Password1234
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          cache-version: sqlserver-${{ matrix.activerecord }}
       - name: RSpec
         run: bundle exec rspec -t ~db:mysql
