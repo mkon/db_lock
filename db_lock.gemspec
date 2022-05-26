@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'README.md']
 
-  s.required_ruby_version = '>= 2.7', '< 3.1'
+  s.required_ruby_version = '>= 2.7', '< 4'
 
   s.add_dependency 'activerecord', '>= 6.1', '< 7.1'
 

@@ -14,6 +14,7 @@ VERSION=$version gem build ${name}.gemspec
 echo "Creating GitHub release"
 link=`gh release create v${version} --target $sha --generate-notes`
 echo $link
+git fetch --tags origin
 
 file="${name}-${version}.gem"
 read -p "Push to rubygems? (y/n) " yn
