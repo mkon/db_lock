@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  validate:
-    name: Validate
+  rubocop:
+    name: Rubocop
     runs-on: ubuntu-latest
 
     steps:
@@ -21,8 +21,8 @@ jobs:
       - name: Rubocop
         run: bundle exec rubocop
 
-  test-mysql:
-    name: Test MySQL
+  rspec-mysql:
+    name: RSpec MySQL
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -54,8 +54,8 @@ jobs:
       - name: RSpec
         run: bundle exec rspec -t ~db:sqlserver
 
-  test-sqlserver:
-    name: Test SQLServer
+  rspec-sqlserver:
+    name: RSpec SQLServer
     runs-on: ubuntu-latest
     strategy:
       matrix:
