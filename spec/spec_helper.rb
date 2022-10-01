@@ -1,6 +1,8 @@
-require 'bundler/setup'
-Bundler.setup
-Bundler.require(:default, :development, :test)
+ENV['RACK_ENV'] ||= 'test'
+
+require 'rubygems'
+require 'bundler'
+Bundler.require :default, 'test'
 
 require 'simplecov'
 SimpleCov.start do
@@ -8,7 +10,10 @@ SimpleCov.start do
 end
 SimpleCov.minimum_coverage 97
 
+require 'dotenv/load'
 require 'active_record'
+
+Dir[File.expand_path('support/**/*.rb', __dir__)].sort.each { |f| require f }
 
 def skip_unless(adapter)
   before do
@@ -22,4 +27,15 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = 'random'
+
+  config.before(:suite) do
+    ENV['MYSQL_URL']&.then do |url|
+      MysqlA.establish_connection url
+      MysqlB.establish_connection url
+    end
+    ENV['POSTGRES_URL']&.then do |url|
+      PostgresA.establish_connection url
+      PostgresB.establish_connection url
+    end
+  end
 end

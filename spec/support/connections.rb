@@ -1,0 +1,6 @@
+MssqlA = Class.new(ActiveRecord::Base)
+MssqlB = Class.new(ActiveRecord::Base)
+MysqlA = Class.new(ActiveRecord::Base)
+MysqlB = Class.new(ActiveRecord::Base)
+PostgresA = Class.new(ActiveRecord::Base)
+PostgresB = Class.new(ActiveRecord::Base)

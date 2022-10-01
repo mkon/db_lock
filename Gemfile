@@ -15,10 +15,15 @@ gem 'byebug'
 
 version = ENV['RAILS'] || '7.0'
 
+gem 'dotenv'
 gem 'rails', "~> #{version}.0"
 
 group :mysql, optional: true do
   gem 'mysql2'
+end
+
+group :postgres, optional: true do
+  gem 'pg'
 end
 
 group :sqlserver, optional: true do

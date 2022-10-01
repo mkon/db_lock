@@ -44,6 +44,17 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_PASSWORD: dummy
+          POSTGRES_USER: root
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 10s
+          --health-timeout 5s --health-retries 5
       sql.data:
         image: mcr.microsoft.com/mssql/server:2019-latest
         env:
@@ -52,14 +63,13 @@ jobs:
         ports:
           - 1433:1433
     env:
-      BUNDLE_WITH: mysql sqlserver
+      BUNDLE_WITH: mysql postgres sqlserver
       MYSQL_URL: mysql2://root@127.0.0.1:3306/test
+      POSTGRES_URL: postgres://root:dummy@127.0.0.1:5432/test
       RAILS: ${{ matrix.activerecord }}
       RAILS_ENV: test
       SQLSERVER_URL: sqlserver://sa:Password1234@127.0.0.1:1433/test
     steps:
-      - name: Create test DB
-        run: mysql --host 127.0.0.1 --port 3306 -uroot -e "CREATE DATABASE IF NOT EXISTS test;"
       - name: Setup FreeTDS
         run: |
           sudo apt-get install -y freetds-bin freetds-common freetds-dev libct4 libsybdb5
@@ -70,8 +80,10 @@ jobs:
             echo 'Waiting for SqlServer ...'
             sleep 2
           done
-      - name: Create test DB
+      - name: Create SQLServer Test DB
         run: echo -e "CREATE DATABASE test\nGO" | tsql -H 127.0.0.1 -p 1433 -U sa -P Password1234
+      - name: Create MYSQL test DB
+        run: mysql --host 127.0.0.1 --port 3306 -uroot -e "CREATE DATABASE IF NOT EXISTS test;"
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
@@ -79,4 +91,5 @@ jobs:
           bundler-cache: true
           cache-version: ${{ matrix.activerecord }}
       - name: RSpec
+        timeout-minutes: 2
         run: bundle exec rspec
