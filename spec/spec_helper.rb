@@ -6,8 +6,7 @@ require 'simplecov'
 SimpleCov.start do
   add_filter '/spec'
 end
-# Coverage is hard to measure as MySQL and SQLServer run in different builds
-SimpleCov.minimum_coverage 85
+SimpleCov.minimum_coverage 97
 
 require 'active_record'
 
