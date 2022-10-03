@@ -8,7 +8,7 @@ require 'simplecov'
 SimpleCov.start do
   add_filter '/spec'
 end
-SimpleCov.minimum_coverage 97
+SimpleCov.minimum_coverage 96
 
 require 'dotenv/load'
 require 'active_record'
@@ -21,6 +21,9 @@ def skip_unless(adapter)
   end
 end
 
+ActiveRecord::Base.logger = Logger.new($stdout)
+ActiveRecord::Base.logger.level = Logger::Severity::INFO
+
 RSpec.configure do |config|
   # Run specs in random order to surface order dependencies. If you find an
   # order dependency and want to debug it, you can fix the order by providing
@@ -28,14 +31,15 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = 'random'
 
+  config.include InOtherThread
+
   config.before(:suite) do
     ENV['MYSQL_URL']&.then do |url|
       MysqlA.establish_connection url
       MysqlB.establish_connection url
     end
     ENV['POSTGRES_URL']&.then do |url|
-      PostgresA.establish_connection url
-      PostgresB.establish_connection url
+      ModelPostgres.establish_connection url
     end
   end
 end

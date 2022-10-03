@@ -3,16 +3,6 @@ module DBLock
     class Base
       include Singleton
 
-      private
-
-      def connection
-        DBLock.db_handler.connection
-      end
-
-      def pool
-        DBLock.db_handler.connection_pool
-      end
-
       def execute(*args)
         run_sanitized :execute, args
       end
@@ -23,6 +13,20 @@ module DBLock
 
       def select_value(*args)
         run_sanitized :select_value, args
+      end
+
+      private
+
+      def connection
+        DBLock.db_handler.connection
+      end
+
+      def pool
+        DBLock.db_handler.connection_pool
+      end
+
+      def logger
+        DBLock.db_handler.logger
       end
 
       def sanitize_sql_array(*args)
