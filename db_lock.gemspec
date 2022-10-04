@@ -3,7 +3,7 @@ $LOAD_PATH.push File.expand_path('lib', __dir__)
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = 'db_lock'
-  s.version     = ENV.fetch('VERSION', '0.8.3')
+  s.version     = ENV.fetch('VERSION', '0.9.0')
   s.licenses    = ['MIT']
   s.authors     = ['mkon']
   s.email       = ['konstantin@munteanu.de']
