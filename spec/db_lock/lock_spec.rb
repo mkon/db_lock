@@ -28,10 +28,12 @@ module DBLock
       end
 
       context 'when using dynamic lock names based on Rails app name' do
+        # rubocop:disable RSpec/MessageChain
         before do
           allow(Rails).to receive_message_chain(:application, :class, :parent_name).and_return('Dummy')
           allow(Rails).to receive_message_chain(:application, :class, :module_parent_name).and_return('Dummy')
         end
+        # rubocop:enable RSpec/MessageChain
 
         it 'supports lock names from rails app name' do
           subject.get(".custom_lock", timeout) { sleep 0 }

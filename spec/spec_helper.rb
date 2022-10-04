@@ -35,8 +35,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     ENV['MYSQL_URL']&.then do |url|
-      MysqlA.establish_connection url
-      MysqlB.establish_connection url
+      ModelMysql.establish_connection url
     end
     ENV['POSTGRES_URL']&.then do |url|
       ModelPostgres.establish_connection url

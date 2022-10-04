@@ -20,22 +20,22 @@ then run `bundle`
 ## Usage
 
 ```ruby
-DBLock::Lock.get('name_of_lock', 5) do
+DBLock.with_lock('name_of_lock', 5) do
   # code here
 end
 ```
 
 Before the code block is executed, it will attempt to acquire a db lock for X seconds (5 in this example). If this fails it will raise an `DBLock::AlreadyLocked` error. The lock is released after the block is executed, even if the block raised an error itself.
 
-The current implementation uses a class variable to store lock state so it is not thread-safe when using multiple threads to acquire/release locks.
+The locking will already fail with an error if the current thread already holds a lock via this gem.
 
 Locks are achieved on the database via:
 
-| Database  | Locking method   |
-|-----------|------------------|
-| MySQL     | GET_LOCK         |
-| Postgres  | pg_advisory_lock |
-| SQLServer | sp_getapplock    |
+| Database  | Locking method     |
+|-----------|--------------------|
+| MySQL     | `GET_LOCK`         |
+| Postgres  | `pg_advisory_lock` |
+| SQLServer | `sp_getapplock`    |
 
 ## Dynamic lock name
 

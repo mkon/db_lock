@@ -9,34 +9,37 @@ module DBLock
       let(:timeout) { 5 }
 
       before do
-        allow(DBLock).to receive(:db_handler).and_return(MysqlA)
+        allow(DBLock).to receive(:db_handler).and_return(ModelMysql)
+      end
+
+      def is_free_lock(name)
+        subject.select_value 'SELECT IS_FREE_LOCK(?)', name
       end
 
       describe '#lock' do
         it 'obtains a mysql lock with the right name' do
-          expect(subject.lock(name, timeout)).to be true
-          res = MysqlA.connection.select_one "SELECT IS_FREE_LOCK('#{name}')"
-          expect(res.first.last).to eq(0)
+          expect {
+            expect(subject.lock(name, timeout)).to be true
+          }.to change { is_free_lock(name) }.from(1).to(0)
         end
 
         it 'waits for timeout seconds' do
-          MysqlB.connection.execute "SELECT GET_LOCK('#{name}', 0)"
-          time1 = Time.now
-          expect(subject.lock(name, 1)).to be false
-          time2 = Time.now
-          expect((time2 - time1).round(2)).to be_between(1.0, 1.1).inclusive
+          in_other_thread { subject.lock(name) }
+
+          time = Benchmark.realtime do
+            expect(subject.lock(name, 1)).to be false
+          end
+          expect(time.round(2)).to be_between(1.0, 1.1).inclusive
         end
       end
 
       describe '#release' do
-        # rubocop:disable RSpec/ExpectInHook
-        before { expect(subject.lock(name)).to be true }
-        # rubocop:enable RSpec/ExpectInHook
+        before { subject.lock(name) }
 
         it 'releases a lock' do
-          expect(subject.release(name)).to be true
-          res = MysqlA.connection.select_one "SELECT IS_FREE_LOCK('#{name}')"
-          expect(res.first.last).to eq(1)
+          expect {
+            expect(subject.release(name)).to be true
+          }.to change { is_free_lock(name) }.from(0).to(1)
         end
       end
     end
