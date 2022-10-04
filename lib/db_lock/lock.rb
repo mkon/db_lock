@@ -9,7 +9,7 @@ module DBLock
     end
 
     def locked?
-      DBLock.locked?
+      DBLock.send(:locked?)
     end
   end
 end

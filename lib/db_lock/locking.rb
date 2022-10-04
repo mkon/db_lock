@@ -25,11 +25,11 @@ module DBLock
     end
     # rubocop:enable Metrics/AbcSize
 
+    private
+
     def locked?
       @locked ||= false
     end
-
-    private
 
     def generate_lock_name(name)
       name = "#{rails_app_name}.#{Rails.env}#{name}" if name[0] == '.' && defined? Rails

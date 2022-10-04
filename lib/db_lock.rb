@@ -19,4 +19,5 @@ module DBLock
 
   custom_deprecator = ActiveSupport::Deprecation.new('1.0.0', 'DBLock')
   ActiveSupport::Deprecation.deprecate_methods(DBLock::Lock, get: 'use DBLock.with_lock instead', deprecator: custom_deprecator)
+  ActiveSupport::Deprecation.deprecate_methods(DBLock::Lock, locked?: 'will be removed without replacement', deprecator: custom_deprecator)
 end

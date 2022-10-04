@@ -17,6 +17,7 @@ module DBLock
 
       it 'uses the Adapter to receive and release the lock' do
         subject.get(name, timeout) { sleep 0 }
+        subject.locked?
         expect(Adapter).to have_received(:lock).with(name, timeout)
         expect(Adapter).to have_received(:release).with(name)
       end
