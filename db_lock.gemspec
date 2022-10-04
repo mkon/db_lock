@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/mkon/db_lock'
   s.summary     = 'Obtain manual db/mysql locks'
   s.description = 'Obtain manual db locks to guard blocks of code from parallel execution.' \
-                  'Currently only supports mysql and ms-sql-server.'
+                  'Supports mysql, postgres and ms-sql-server.'
 
   s.metadata['rubygems_mfa_required'] = 'true'
 
