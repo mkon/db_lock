@@ -24,6 +24,8 @@ Metrics/CyclomaticComplexity:
 Metrics/BlockLength:
   Exclude:
     - '**/*.ru'
+Metrics/MethodLength:
+  Max: 15
 
 Style/ClassAndModuleChildren:
   Enabled: false

@@ -4,7 +4,6 @@ module DBLock
   module Lock
     extend self
 
-    # rubocop:disable Metrics/AbcSize
     def get(name, timeout = 0)
       timeout = timeout.to_f # catches nil
       timeout = 0 if timeout.negative?
@@ -24,7 +23,6 @@ module DBLock
       Adapter.release(name) if locked?
       @locked = false
     end
-    # rubocop:enable Metrics/AbcSize
 
     def locked?
       @locked ||= false

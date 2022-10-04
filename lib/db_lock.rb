@@ -8,7 +8,7 @@ module DBLock
 
   class AlreadyLocked < StandardError; end
 
-  attr_accessor :db_handler
+  attr_writer :db_handler
 
   def db_handler
     # this must be an active record base object or subclass

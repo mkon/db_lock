@@ -1,8 +1,3 @@
-require 'spec_helper'
-
-require_relative '../../support/connection/mssql_a'
-require_relative '../../support/connection/mssql_b'
-
 module DBLock
   module Adapter
     RSpec.describe Sqlserver, db: :sqlserver do
@@ -14,23 +9,23 @@ module DBLock
       let(:timeout) { 5 }
 
       before(:all) do
-        Connection::MssqlA.establish_connection ENV['SQLSERVER_URL']
-        Connection::MssqlB.establish_connection ENV['SQLSERVER_URL']
+        MssqlA.establish_connection ENV['SQLSERVER_URL']
+        MssqlB.establish_connection ENV['SQLSERVER_URL']
       end
 
       before do
-        allow(DBLock).to receive(:db_handler).and_return(Connection::MssqlA)
+        allow(DBLock).to receive(:db_handler).and_return(MssqlA)
       end
 
       describe '#lock' do
         it 'obtains a sqlserver lock with the right name' do
           expect(subject.lock(name, timeout)).to be true
-          res = Connection::MssqlA.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session')"
+          res = MssqlA.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session')"
           expect(res.values.first).to eq 'Exclusive'
         end
 
         it 'waits for timeout seconds' do
-          Connection::MssqlB.connection.execute_procedure(
+          MssqlB.connection.execute_procedure(
             'sp_getapplock',
             Resource: name,
             LockMode: 'Exclusive',
@@ -51,7 +46,7 @@ module DBLock
 
         it 'releases a lock' do
           expect(subject.release(name)).to be true
-          res = Connection::MssqlA.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session')"
+          res = MssqlA.connection.select_one "SELECT APPLOCK_MODE ('public', '#{name}', 'Session')"
           expect(res.values.first).to eq 'NoLock'
         end
       end
