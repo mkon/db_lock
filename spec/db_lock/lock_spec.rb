@@ -8,8 +8,7 @@ module DBLock
     let(:timeout) { 5 }
 
     before do
-      allow(Adapter).to receive(:lock).and_return(true)
-      allow(Adapter).to receive(:release).and_return(true)
+      allow(Adapter).to receive_messages(lock: true, release: true)
     end
 
     describe '#get' do
