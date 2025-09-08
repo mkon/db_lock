@@ -22,6 +22,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rspec', '~> 3.7'
   s.add_development_dependency 'rubocop', '1.61.0'
-  s.add_development_dependency 'rubocop-rspec', '3.0.3'
+  s.add_development_dependency 'rubocop-rspec', '3.7.0'
   s.add_development_dependency 'simplecov'
 end
